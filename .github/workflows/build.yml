@@ -1,0 +1,96 @@
+name: Build
+# Run workflow when manually triggered, part of a pull request or on a tag push (release)
+on:
+  pull_request:
+  push:
+
+jobs:
+  build:
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      matrix:
+        config:
+          - name: "intel"
+            os: "macos-latest"
+            cmake_preset: "intel"
+          - name: "amd64"
+            os: "macos-latest"
+            cmake_preset: "amd64"
+    steps:
+      - name: 'Checkout repo recursively.'
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: 'Install ninja-build tool.'
+        uses: seanmiddleditch/gha-setup-ninja@v3
+
+      - name: 'Set install prefix.'
+        id: cmake_install_prefix
+        env:
+          RUNNER_WORKSPACE: ${{ runner.workspace }}
+        shell: cmake -P {0}
+        run: |
+          string(REPLACE " " "_" NAME_NO_SPACES "${{ matrix.config.name }}")
+          file(TO_CMAKE_PATH "$ENV{RUNNER_WORKSPACE}" RUNNER_WORKSPACE)
+          set(INSTALL_DIR "${NAME_NO_SPACES}")
+          file(TO_NATIVE_PATH "${RUNNER_WORKSPACE}/${INSTALL_DIR}" PREFIX)
+          message("::set-output name=install_prefix::${PREFIX}")
+          message("::set-output name=install_dir::${INSTALL_DIR}")
+
+      - name: 'Configure'
+        run: cmake --preset ${{ matrix.config.cmake_preset }} -DCMAKE_INSTALL_PREFIX="${{ steps.cmake_install_prefix.outputs.install_prefix }}"
+        env:
+          # See https://vcpkg.io/en/docs/users/binarycaching.html for syntax of this variable. We want to clear out
+          # the default locations and both restore from and save to our custom .vcpkg directory.
+          VCPKG_BINARY_SOURCES: 'clear;files,${{ env.VCPKG_CACHE_LOCATION }},readwrite'
+          CMAKE_C_COMPILER_LAUNCHER: 'ccache'
+          CMAKE_CXX_COMPILER_LAUNCHER: 'ccache'
+
+      - name: 'Build'
+        run: cmake --build --preset ${{ matrix.config.cmake_preset }}
+
+      - name: 'Install to output dir.'
+        if: ${{ matrix.config.package }}
+        run: |
+          cmake -E make_directory "${{ steps.cmake_install_prefix.outputs.install_prefix }}"
+          cmake --build --preset ${{ matrix.config.cmake_preset }} --target install
+
+      - name: 'Upload output dir as build artifact.'
+        if: ${{ matrix.config.package }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ steps.cmake_install_prefix.outputs.install_dir }}
+          path: ${{ steps.cmake_install_prefix.outputs.install_prefix }}
+
+    outputs:
+      $${ steps.cmake_install_prefix.outputs.install_dir }}
+  ub:
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    needs: build
+
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: 'intel'
+          path: "${{ runner.workspace }}/intel"
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: 'amd64'
+          path: "${{ runner.workspace }}/amd64"
+
+      - name: 'build ub'
+        run: |
+          cp -r intel ub
+          rm ub/hello
+          lipo -create intel/hello amd64/hello -output ub/hello
+          lipo ub/hello -detailed-info
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: 'ub'
+          path: '${{ runner.workspace }}/ub'
+

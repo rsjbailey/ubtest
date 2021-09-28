@@ -1,0 +1,44 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 21,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "generator": "Ninja",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": {
+          "type": "STRING",
+          "value": "Release"
+        },
+        "CMAKE_OSX_DEPLOYMENT_TARGET": {
+          "type": "STRING",
+          "value": "10.14"
+        }
+      }
+    },
+    {
+      "name": "arm64",
+      "cacheVariables": {
+        "CMAKE_OSX_ARCHITECTURES": {
+          "type": "STRING",
+          "value": "arm64"
+        }
+      }
+    },
+    {
+      "name": "intel",
+      "cacheVariables": {
+        "CMAKE_OSX_ARCHITECTURES": {
+          "type": "STRING",
+          "value": "x86_64"
+        }
+      }
+    }
+  ]
+}
