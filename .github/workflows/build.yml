@@ -64,8 +64,6 @@ jobs:
           name: ${{ steps.cmake_install_prefix.outputs.install_dir }}
           path: ${{ steps.cmake_install_prefix.outputs.install_prefix }}
 
-    outputs:
-      ${{ steps.cmake_install_prefix.outputs.install_dir }}
   ub:
     name: ${{ matrix.config.name }}
     runs-on: ${{ matrix.config.os }}
