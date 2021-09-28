@@ -60,7 +60,7 @@ jobs:
 
   ub:
     name: universal_binary
-    runs-on: ${{ matrix.config.os }}
+    runs-on: macos-latest
     needs: build
 
     steps:
