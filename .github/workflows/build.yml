@@ -14,7 +14,7 @@ jobs:
           - name: "intel"
             os: "macos-latest"
             cmake_preset: "intel"
-          - name: "amd64"
+          - name: "arm64"
             os: "macos-latest"
             cmake_preset: "amd64"
     steps:
@@ -65,7 +65,7 @@ jobs:
           path: ${{ steps.cmake_install_prefix.outputs.install_prefix }}
 
   ub:
-    name: ${{ matrix.config.name }}
+    name: universal_binary
     runs-on: ${{ matrix.config.os }}
     needs: build
 
