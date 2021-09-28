@@ -41,12 +41,6 @@ jobs:
 
       - name: 'Configure'
         run: cmake --preset ${{ matrix.config.cmake_preset }} -DCMAKE_INSTALL_PREFIX="${{ steps.cmake_install_prefix.outputs.install_prefix }}"
-        env:
-          # See https://vcpkg.io/en/docs/users/binarycaching.html for syntax of this variable. We want to clear out
-          # the default locations and both restore from and save to our custom .vcpkg directory.
-          VCPKG_BINARY_SOURCES: 'clear;files,${{ env.VCPKG_CACHE_LOCATION }},readwrite'
-          CMAKE_C_COMPILER_LAUNCHER: 'ccache'
-          CMAKE_CXX_COMPILER_LAUNCHER: 'ccache'
 
       - name: 'Build'
         run: cmake --build --preset ${{ matrix.config.cmake_preset }}
