@@ -75,7 +75,7 @@ jobs:
       - name: 'build ub'
         run: |
           cp -r intel ub
-          rm ub/hello
+          rm ub/bin/hello
           lipo -create intel/bin/hello arm64/bin/hello -output ub/bin/hello
           lipo ub/hello -detailed-info
         working-directory: ${{ runner.workspace }}
