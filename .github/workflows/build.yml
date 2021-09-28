@@ -16,7 +16,7 @@ jobs:
             cmake_preset: "intel"
           - name: "arm64"
             os: "macos-latest"
-            cmake_preset: "amd64"
+            cmake_preset: "arm64"
     steps:
       - name: 'Checkout repo recursively.'
         uses: actions/checkout@v2
