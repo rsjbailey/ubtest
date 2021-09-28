@@ -40,5 +40,15 @@
         }
       }
     }
+  ],
+  "buildPresets": [
+    {
+      "name": "intel",
+      "configurePreset": "intel"
+    },
+    {
+      "name": "arm64",
+      "configurePreset": "arm64"
+    }
   ]
 }
