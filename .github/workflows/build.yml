@@ -70,14 +70,15 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: 'arm64'
-          path: "${{ runner.workspace }}/amd64"
+          path: "${{ runner.workspace }}/arm64"
 
       - name: 'build ub'
         run: |
           cp -r intel ub
           rm ub/hello
-          lipo -create intel/hello amd64/hello -output ub/hello
+          lipo -create intel/hello armm64/hello -output ub/hello
           lipo ub/hello -detailed-info
+        working-directory: ${{ runner.workspace }}
 
       - uses: actions/upload-artifact@v2
         with:
