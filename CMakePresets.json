@@ -29,7 +29,8 @@
           "type": "STRING",
           "value": "arm64"
         }
-      }
+      },
+      "inherits": "base"
     },
     {
       "name": "intel",
@@ -38,7 +39,8 @@
           "type": "STRING",
           "value": "x86_64"
         }
-      }
+      },
+      "inherits": "base"
     }
   ],
   "buildPresets": [
