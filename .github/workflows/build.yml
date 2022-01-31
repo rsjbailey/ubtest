@@ -57,7 +57,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: ${{ steps.cmake_install_prefix.outputs.install_dir }}
-          path: ${{ steps.cmake_install_prefix.outputs.install_prefix }}.tar
+          path: ${{ steps.cmake_install_prefix.outputs.install_dir }}.tar
 
   ub:
     name: universal_binary
