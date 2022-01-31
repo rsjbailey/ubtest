@@ -68,15 +68,21 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: 'intel'
-          path: "${{ runner.workspace }}/intel"
+          path: "intel"
 
       - uses: actions/download-artifact@v2
         with:
           name: 'arm64'
-          path: "${{ runner.workspace }}/arm64"
+          path: "arm64"
       
       - name: dir list
         run: ls -R
+      
+      - name: untar
+        run: tar -xf intel/intel.tar
+        
+      - name: untar arm64
+        run: tar -xf arm64/arm64/tar
 
       - name: 'build ub'
         run: |
