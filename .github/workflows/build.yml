@@ -49,12 +49,15 @@ jobs:
         run: |
           cmake -E make_directory "${{ steps.cmake_install_prefix.outputs.install_prefix }}"
           cmake --build --preset ${{ matrix.config.cmake_preset }} --target install
+          
+      - name: 'macOS: Tar output dir.'
+        run: tar -cvf ${{ steps.cmake_install_prefix.outputs.install_dir }}.tar -C ${{ steps.cmake_install_prefix.outputs.install_prefix }} .
 
       - name: 'Upload output dir as build artifact.'
         uses: actions/upload-artifact@v2
         with:
           name: ${{ steps.cmake_install_prefix.outputs.install_dir }}
-          path: ${{ steps.cmake_install_prefix.outputs.install_prefix }}
+          path: ${{ steps.cmake_install_prefix.outputs.install_prefix }}.tar
 
   ub:
     name: universal_binary
@@ -71,6 +74,9 @@ jobs:
         with:
           name: 'arm64'
           path: "${{ runner.workspace }}/arm64"
+      
+      - name: dir list
+        run: ls -R
 
       - name: 'build ub'
         run: |
