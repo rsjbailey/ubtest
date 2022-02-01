@@ -93,9 +93,12 @@ jobs:
           rm ub/bin/hello
           lipo -create intel/bin/hello arm64/bin/hello -output ub/bin/hello
           lipo ub/bin/hello -detailed_info
+      
+      - name: 'tar ub'
+        run: tar -cvf ub.tar -C ub
 
       - uses: actions/upload-artifact@v2
         with:
           name: 'ub'
-          path: 'ub'
+          path: 'ub.tar'
 
