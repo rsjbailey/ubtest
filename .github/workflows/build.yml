@@ -93,10 +93,9 @@ jobs:
           rm ub/bin/hello
           lipo -create intel/bin/hello arm64/bin/hello -output ub/bin/hello
           lipo ub/bin/hello -detailed_info
-        working-directory: ${{ runner.workspace }}
 
       - uses: actions/upload-artifact@v2
         with:
           name: 'ub'
-          path: '${{ runner.workspace }}/ub'
+          path: 'ub'
 
