@@ -95,7 +95,7 @@ jobs:
           lipo ub/bin/hello -detailed_info
       
       - name: 'tar ub'
-        run: tar -cvf ub.tar -C ub
+        run: tar -cvf ub.tar -C ub .
 
       - uses: actions/upload-artifact@v2
         with:
